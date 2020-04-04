@@ -44,18 +44,48 @@ public:
 		this->pri = pri;
 	}
 
-	/*bool operator>(Person const& person) {
+	bool operator>(Person const& person) {
 		//TODO
-		if(this->pri > person.pri)
+		if (this->pri > person.pri) {
 			return true;
+		}
+		else if (this->pri < person.pri) {
+			return false;
+		}
+		
+		if (my_strcmp(this->name, person.name)<0) {
+			return true;
+		}
+		else if (my_strcmp(this->name, person.name) > 0) {
+			return false;
+		}
+
+		if (this->et < person.et) {
+			return true;
+		}
 		return false;
 	}
 	bool operator < (Person const& person) {
 		
-		if (this->pri < person.pri)
+		if (this->pri < person.pri) {
 			return true;
+		}
+		else if (this->pri > person.pri) {
+			return false;
+		}
+
+		if (my_strcmp(this->name, person.name) > 0) {
+			return true;
+		}
+		else if (my_strcmp(this->name, person.name) < 0) {
+			return false;
+		}
+
+		if (this->et > person.et) {
+			return true;
+		}
 		return false;
-	}*/
+	}
 };
 
 
@@ -74,40 +104,40 @@ public:
 			this->arr[i] = arr[i-1];
 		}
 		this->size = N;
-		build_heap(this->arr,this->size);
+		build_heap();
 	}
 	void swap(Person* x, Person* y) {
 		Person temp = *x;
 		*x = *y;
 		*y = temp;
 	}
-	void max_heapify(Person arr[], int i, int N) {
+	void max_heapify( int i) {
 		int left = 2 * i;
 		int right = 2 * i + 1;
 		int largest = i;
 
-		if (left < N && arr[left].pri > arr[largest].pri) {
+		if (left <= size && arr[left] > arr[largest]) {
 			largest = left;
 		}
-		if (right < N && arr[right].pri > arr[largest].pri) {
+		if (right <= size && arr[right] > arr[largest]) {
 			largest = right;
 		}
 
 		if (largest != i) {
 			swap(&arr[i], &arr[largest]);
-			max_heapify(arr, largest, N);
+			max_heapify(largest);
 		}
 	}
-	void build_heap(Person arr[], int N) {
-		for (int i = N / 2; i >= 1; i--) {
-			max_heapify(arr, i, N);
+	void build_heap() {
+		for (int i = size / 2; i >= 1; i--) {
+			max_heapify(i);
 		}
 	}
 	void increase_value(int i, Person value)
 	{
 		//assume value > arr[i]
 		arr[i] = value;
-		while (i > 1 && arr[i / 2].pri < arr[i].pri) {
+		while (i > 1 && arr[i / 2] < arr[i]) {
 			swap(&arr[i / 2], &arr[i]);
 			i /= 2;
 		}
@@ -119,15 +149,26 @@ public:
 		this->size++;
 		increase_value(this->size,value);
 	}
+	Person extract_max() {
+		if (size == 0) {
+		
+			return *(new Person);
+		}
+		Person max = arr[1];
+		arr[1] = arr[size];
+		size--;
+		//max_heapify(1);
+		return max;
+	}
 
 };
 int main()
 {
 
-	Person *p1 = new Person("randeep", 3, 1);
-	Person* p2 = new Person("Sandeep", 2, 4);
-	Person* p3 = new Person("Tandeep", 3, 2);
-	Person* p4 = new Person("Andeep", 3, 1);
+	Person *p1 = new Person("randeep", 1, 1);
+	Person* p2 = new Person("Sandeep", 2, 2);
+	Person* p3 = new Person("Tandeep", 3, 3);
+	Person* p4 = new Person("Andeep", 4, 4);
 
 
 	Person parry[4];
@@ -137,19 +178,19 @@ int main()
 	parry[3] = *p4;
 
 
-	Heap h(parry,4);
-	
-	/*h.insert_value(*p1);
+	//Heap h(parry,4);
+	Heap h;
+	h.insert_value(*p1);
 	h.insert_value(*p2);
 	h.insert_value(*p3);
-	h.insert_value(*p4);8*/
+	h.insert_value(*p4);
 
-
-
-	for (int i = 1; i <= h.size; i++) {
-		cout << h.arr[i].name<<endl;
-	}
 
 	
+	while (h.size > 0) {
+		cout << h.extract_max().name << endl;
+	}
+
+
 	return 0;
 }
