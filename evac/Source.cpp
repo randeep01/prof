@@ -44,7 +44,7 @@ public:
 		this->pri = pri;
 	}
 
-	bool operator>(Person const& person) {
+	/*bool operator>(Person const& person) {
 		//TODO
 		if(this->pri > person.pri)
 			return true;
@@ -55,7 +55,7 @@ public:
 		if (this->pri < person.pri)
 			return true;
 		return false;
-	}
+	}*/
 };
 
 
@@ -86,10 +86,10 @@ public:
 		int right = 2 * i + 1;
 		int largest = i;
 
-		if (left < N && arr[left] > arr[largest]) {
+		if (left < N && arr[left].pri > arr[largest].pri) {
 			largest = left;
 		}
-		if (right < N && arr[right] > arr[largest]) {
+		if (right < N && arr[right].pri > arr[largest].pri) {
 			largest = right;
 		}
 
@@ -107,7 +107,7 @@ public:
 	{
 		//assume value > arr[i]
 		arr[i] = value;
-		while (i > 1 && arr[1 / 2] < arr[i]) {
+		while (i > 1 && arr[i / 2].pri < arr[i].pri) {
 			swap(&arr[i / 2], &arr[i]);
 			i /= 2;
 		}
